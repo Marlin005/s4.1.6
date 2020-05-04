@@ -1,0 +1,49 @@
+<div [ngSwitch]="outputType">
+
+    <div *ngSwitchCase="'boolean'" class="text-center">
+        <i class="big text-success icon-circle-check" [hidden]="!value"></i>
+        <i class="big text-muted icon-circle-cross" [hidden]="value"></i>
+    </div>
+
+    <div *ngSwitchCase="'number'">{{value | number: '1.2-2':'ru-RU'}}</div>
+
+    <div *ngSwitchCase="'date'">{{value | date: options.format}}</div>
+
+    <div *ngSwitchCase="'dateObject'">{{value | dateFromObject: options.format}}</div>
+
+    <div *ngSwitchCase="'userRole'">
+        <span [class]="value | userRoleColor">
+            {{value | userRoleName}}
+        </span>
+    </div>
+
+    <div *ngSwitchCase="'userEmail'">
+        <ng-container *ngIf="!object.userId; else emailLink">
+            {{ value }}
+        </ng-container>
+        <ng-template #emailLink>
+            <a href="#/users/{{ value }}">
+                <i class="icon-user"></i>
+                {{ value }}
+            </a>
+        </ng-template>
+    </div>
+
+    <div class="text-center" *ngSwitchCase="'status'">
+        <div ngbDropdown [placement]="'bottom'" #myDrop="ngbDropdown" (openChange)="optionUpdate('dropDownOpenChange', myDrop.isOpen())">
+            <button class="btn btn-primary btn-xs shk-btn-status" ngbDropdownToggle [style.backgroundColor]="getStatusColor(value)">
+                {{value}}
+            </button>
+            <div ngbDropdownMenu aria-labelledby="dropdownStatus">
+                <ng-container *ngFor="let status of settingsStatuses">
+                    <button class="dropdown-item" (click)="optionUpdate('status', status.name)" [disabled]="status.name === value">
+                        {{status.name}}
+                    </button>
+                </ng-container>
+            </div>
+        </div>
+    </div>
+
+    <div *ngSwitchDefault>{{value}}</div>
+
+</div>

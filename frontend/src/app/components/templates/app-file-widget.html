@@ -1,0 +1,39 @@
+<div class="card card-body p-2" (drop)="dropHandler($event)" (dragover)="dragOverHandler($event);">
+    <div [ngClass]="{'min-height110': largeFieldMode}">
+        <div [style.minHeight]="largeFieldMode ? '35px': 0">
+            <div *ngIf="fieldTitle">
+                <label for="field_{{ fieldName }}">
+                    {{ fieldTitle }}
+                    <span class="text-muted" *ngIf="fieldName">({{ fieldName }})</span>
+                    <span class="text-danger" *ngIf="required">*</span>
+                </label>
+            </div>
+        </div>
+        <div class="text-center">
+            <ng-container *ngIf="allowMultiple; else fileInputTemplate">
+                <input type="file" id="field_{{ fieldName }}" [name]="fieldName" [accept]="allowedExtensions" multiple style="display:none;" (change)="fileChange($event)" #fileInput>
+            </ng-container>
+            <ng-template #fileInputTemplate>
+                <input type="file" id="field_{{ fieldName }}" [name]="fieldName" [accept]="allowedExtensions" style="display:none;" (change)="fileChange($event)" #fileInput>
+            </ng-template>
+            <div class="mx-auto relative" [ngClass]="{'show-on-hover-parent': hasPreviewImage && fileName}" style="width: 265px; min-height: 40px;">
+                <div [style.display]="hasPreviewImage && fileName ? 'block' : 'none'">
+                    <img [src]="imageUrl" alt="Preview" class="img-thumbnail" style="width: 265px;" #imgPreview>
+                </div>
+                <div class="file-buttons show-on-hover-child-left">
+                    <button type="button" class="btn btn-secondary btn-wide mr-2" (click)="buttonHandler($event)" (drop)="dropHandler($event)" (dragover)="dragOverHandler($event)">
+                        <i class="icon-upload"></i>
+                        {{ 'CHOOSE_FILE' | translate }}
+                    </button>
+                    <button type="button" class="btn btn-secondary" *ngIf="fileName" [title]="'CLEAR' | translate" (click)="fileClear()">
+                        <i class="icon-cross"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="text-secondary" [ngClass]="{'pt-3 pb-2': largeFieldMode}" *ngIf="fileName">
+                <i class="icon-file"></i>
+                {{ fileName }}
+            </div>
+        </div>
+    </div>
+</div>

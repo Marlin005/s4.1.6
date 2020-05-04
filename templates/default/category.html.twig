@@ -1,0 +1,227 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ currentPage.title | default('') }} - {{ app_name }}{% endblock %}
+
+{% block stylesheets -%}
+    {{ parent() }}
+    <link href="{{ asset('bundles/comments/css/comments.css') }}" rel="stylesheet">
+{% endblock -%}
+
+{% block body %}
+    {% include 'header.html.twig' %}
+    <main role="main" class="container">
+
+        <div class="float-lg-right mb-3 text-right">
+            {{ shopCart('favorites_link', 'favorites') }}
+        </div>
+
+        {% include 'nav/breadcrumbs.html.twig' %}
+
+        <div class="min-height400">
+
+            <h1>{{ fieldByLocale(currentPage.menuData, 'title') }}</h1>
+
+            {% include 'nav/child-categories-menu.html.twig' %}
+
+            {% include 'nav/siblings-menu.html.twig' %}
+
+            {% if items | length == 0 and queryOptions.filter | length == 0 %}
+                {% if categoriesMenu | length == 0 %}
+                    <div class="alert alert-info">
+                        {{ 'This category is empty' | trans }}.
+                    </div>
+                {% endif %}
+            {% else %}
+
+                {% include 'catalog/sort.html.twig' %}
+
+                <div class="row">
+                    <div class="col-md-3">
+
+                        {% include 'catalog/filters.html.twig' %}
+
+                    </div>
+                    <div class="col-md-9">
+
+                        {% if items | length > 0 %}
+                            <div class="row">
+
+                                {% for item in items %}
+                                    {% if listTemplate == 'grid' %}
+                                        <div class="col-6 col-lg-4">
+                                            <div class="card mb-3 show-on-hover-parent card-border-on-hover">
+                                                <div class="card-body">
+                                                    <div class="position-relative js-shopping-cart-favorites">
+                                                        {{ renderOutputTypeArray(item, fields, '', {"currency": currency}) }}
+                                                        <div class="position-absolute pos-right-top show-on-hover">
+                                                            <form action="{{ pathLocalized('shop_cart_action') }}" method="post">
+                                                                <input type="hidden" name="item_id" value="{{ item._id }}">
+                                                                <input type="hidden" name="category_id" value="{{ item.parentId }}">
+                                                                <input type="hidden" name="type" value="favorites">
+                                                                <button class="btn btn-outline-secondary-white" type="submit" data-toggle="tooltip" name="action" value="add_to_cart" title="{{ 'To favorites' | trans }}">
+                                                                    <i class="icon-heart1"></i>
+                                                                </button>
+                                                            </form>
+                                                        </div>
+                                                    </div>
+                                                    <div class="position-relative js-shopping-cart-product">
+                                                        <div class="card-footer-absolute show-on-hover">
+                                                            <form action="{{ pathLocalized('shop_cart_action') }}" method="post">
+                                                                <input type="hidden" name="item_id" value="{{ item._id }}">
+                                                                <input type="hidden" name="category_id" value="{{ item.parentId }}">
+                                                                <input type="hidden" name="type" value="shop">
+                                                                <div class="row no-gutters">
+                                                                    <div class="col-4">
+                                                                        <input type="number" class="form-control d-inline-block text-center" value="1" min="1" step="1" name="count">
+                                                                    </div>
+                                                                    <div class="col-8 pl-2">
+                                                                        <button type="submit" class="btn btn-primary btn-block" name="submit_button">
+                                                                            {{ 'Add to cart' | trans }}
+                                                                        </button>
+                                                                    </div>
+                                                                </div>
+                                                            </form>
+                                                            <div class="clearfix"></div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    {% elseif listTemplate == 'list' %}
+                                        <div class="col-12 shk-item">
+                                            <div class="card mb-3">
+                                                <div class="card-body">
+                                                    <div class="catalog-list-item">
+                                                        <div class="catalog-list-item-inner">
+                                                            {{ renderOutputTypeChunk(item, fieldsAll, 'tag', 'list_', [], 1) }}
+                                                            {{ renderOutputTypeChunk(item, fieldsAll, 'image', '', [], 1) }}
+                                                            {{ renderOutputTypeChunk(item, fieldsAll, 'header', '', [], 1) }}
+                                                            {{ renderOutputTypeChunk(item, fieldsAll, 'description', '', [], 1) }}
+                                                            {{ renderOutputTypeChunk(item, fieldsAll, 'price', '', {"currency": currency}, 1) }}
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    {% endif %}
+                                {% endfor %}
+
+                            </div>
+
+                            {% include 'nav/pagination.html.twig' %}
+                        {% else %}
+                            <div class="alert alert-info">
+                                {{ 'search.nothing_found' | trans }}
+                            </div>
+                        {% endif %}
+
+                    </div>
+                </div>
+            {% endif %}
+
+        </div>
+
+    </main>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+
+    <script>
+        var shoppingCart, favorites;
+
+        // Update buttons "Add to favorites"
+        function favoritesUpdateProductsButtons() {
+            if (!favorites.data || !favorites.data.favorites) {
+                return;
+            }
+            var forms = document.querySelectorAll('.js-shopping-cart-favorites form');
+            forms.forEach(function(formEl) {
+                var buttonEl = formEl.querySelector('button[type="submit"]'),
+                    idFieldEl = formEl.querySelector('input[name="item_id"]'),
+                    productId = idFieldEl ? parseInt(idFieldEl.value) : 0;
+                ids = document.getElementById('favoritesLinkContainer').dataset.shoppingcartIds.split(',');
+                var ids = ids.map(function(id) {
+                    return parseInt(id);
+                });
+                if (!buttonEl || !idFieldEl) {
+                    return;
+                }
+                if (ids.indexOf(productId) > -1) {
+                    buttonEl.classList.remove('btn-outline-secondary-white');
+                    buttonEl.classList.add('btn-info');
+                    buttonEl.value = 'remove_by_id';
+                } else {
+                    buttonEl.classList.remove('btn-info');
+                    buttonEl.classList.add('btn-outline-secondary-white');
+                    buttonEl.value = 'add_to_cart';
+                }
+            });
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            shk.onAfterInit(function() {
+                shk.filtersInit(true);
+            });
+
+            shoppingCart = new ShoppingCart({
+                baseUrl: '{{ app.request.baseUrl }}',// Base URL
+                connectorUrl: '{{ pathLocalized('shop_cart_action') }}',// URL for requests
+                selector: '#shoppingCartSmallContainer',// Shopping cart container selector
+                productFormSelector: '.js-shopping-cart-product form',// Product form selector
+                templateName: 'shop_cart'// Shopping cart template name
+            });
+            shoppingCart
+                .addEventListener('formSubmitBefore', function(e) {// Before submitting form data
+                    var buttonEl = e.detail.element.querySelector('button[type="submit"]');
+                    if (buttonEl) {
+                        buttonEl.setAttribute('disabled', '');// Disable button
+                    }
+                })
+                .addEventListener('load', function(e) {// After receiving a response from the shopping cart
+                    if (e.detail.element) {
+                        var buttonEl = e.detail.element.querySelector('button[type="submit"]');
+                        if (buttonEl) {
+                            buttonEl.removeAttribute('disabled');// Remove the button lock
+                        }
+                    }
+                    if (e.detail
+                        && e.detail.response
+                        && !e.detail.response.success
+                        && e.detail.response.message) {
+                        alert(e.detail.response.message);
+                    }
+                });
+
+            // Favorites
+            favorites = new ShoppingCart({
+                baseUrl: '{{ app.request.baseUrl }}',
+                connectorUrl: '{{ pathLocalized('shop_cart_action') }}',
+                productFormSelector: '.js-shopping-cart-favorites form',
+                selectorCountUniqueTotal: '#favoritesCountUniqueTotal',
+                autoUpdateElements: true,
+                data: {
+                    items_unique_total: 0,
+                    ids: []
+                }
+            });
+            favorites
+                .addEventListener('load', function(e) {
+                    // Update CSS class of #favoritesLinkContainer
+                    if (e.detail.response) {
+                        if (e.detail.response.items_unique_total === 0) {
+                            document.getElementById('favoritesLinkContainer').classList.add('text-muted');
+                        } else {
+                            document.getElementById('favoritesLinkContainer').classList.remove('text-muted');
+                        }
+                    }
+                    // Update buttons "Add to favorites"
+                    if (e.detail.element && e.detail.response) {
+                        document.getElementById('favoritesLinkContainer').dataset.shoppingcartIds = e.detail.response.ids.join(',');
+                        favoritesUpdateProductsButtons();
+                    }
+                });
+            favoritesUpdateProductsButtons();
+        });
+    </script>
+{% endblock %}

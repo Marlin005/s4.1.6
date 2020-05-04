@@ -1,0 +1,29 @@
+{
+  "name": "andchir/shopkeeper4-comments",
+  "type": "symfony-bundle",
+  "description": "Reviews and ratings for Symfony4",
+  "keywords": ["symfony4", "symfony-bundle", "comments", "raiting", "reviews", "shopkeeper4"],
+  "license": "MIT",
+  "homepage": "http://modx-shopkeeper.ru/",
+  "authors": [
+    {
+      "name": "andchir",
+      "email": "andchir@gmail.com"
+    }
+  ],
+  "autoload": {
+      "psr-4": {
+          "Andchir\\CommentsBundle\\": ""
+      }
+  },
+  "require": {
+    "doctrine/persistence": "*",
+    "symfony/form":  "*",
+    "symfony/translation": "*"
+  },
+  "extra": {
+      "symfony": {
+          "require": "4.3.*"
+      }
+  }
+}

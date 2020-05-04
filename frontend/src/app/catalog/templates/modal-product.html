@@ -1,0 +1,121 @@
+<div class="position-relative modal-on-maximized">
+    <div class="tabs-top">
+        <button type="button" class="btn btn-outline-primary btn-sm d-block"
+                [disabled]="submitted"
+                (click)="closeModal($event)">
+            <i class="icon-cross mr-1"></i>
+            <span>{{'CLOSE' | translate}}</span>
+        </button>
+        <button type="button" class="btn btn-outline-primary btn-sm d-block"
+                [disabled]="submitted"
+                (click)="minimize($event)">
+            <i class="icon-minimize mr-1"></i>
+            <span>{{'MINIMIZE' | translate}}</span>
+        </button>
+    </div>
+</div>
+<div class="modal-header d-block">
+    <div class="position-relative modal-on-minimized">
+        <div class="pos-absolute-right">
+            <button type="button" class="btn btn-no-border btn-sm-sm" [title]="'EXPAND' | translate" (click)="maximize($event)">
+                <i class="icon-maximize"></i>
+            </button>
+            <button type="button" class="btn btn-no-border btn-sm-sm ml-1" [title]="'CLOSE' | translate" (click)="closeModal($event)">
+                <i class="icon-cross"></i>
+            </button>
+        </div>
+    </div>
+    <h4 class="modal-title text-overflow mr-5">{{modalTitle}}</h4>
+</div>
+
+<form [formGroup]="form" [class.loading]="loading">
+    <div class="modal-body py-0">
+
+        <div class="row form-group form-group-message">
+            <div class="col-md-5">
+                <label for="fieldCategory">{{'PARENT_FOLDER' | translate}}</label>
+            </div>
+            <div class="col-md-7">
+
+                <app-select-parent-dropdown
+                        name="parentId"
+                        formControlName="parentId"
+                        [(ngModel)]="model.parentId"
+                        (ngModelChange)="onChangeContentType()"></app-select-parent-dropdown>
+
+                <div *ngIf="formErrors.parentId" class="alert alert-danger">
+                    {{formErrors.parentId}}
+                </div>
+            </div>
+        </div>
+
+        <div class="row form-group">
+            <div class="col-md-7 ml-md-auto">
+                <div class="card card-body p-2 pl-3">
+
+                    <div class="custom-control custom-checkbox m-0">
+                        <input type="checkbox" class="custom-control-input" id="fieldIsActive{{ uniqueId }}" value="1" name="isActive" formControlName="isActive" [(ngModel)]="model.isActive">
+                        <span class="custom-control-indicator"></span>
+                        <label class="custom-control-label" for="fieldIsActive{{ uniqueId }}">{{'ACTIVE' | translate}}</label>
+                    </div>
+
+                    <div class="custom-control custom-checkbox mt-2">
+                        <input type="checkbox" class="custom-control-input" id="fieldClearCache{{ uniqueId }}" value="1" name="clearCache" formControlName="clearCache" [(ngModel)]="model.clearCache">
+                        <label class="custom-control-label" for="fieldClearCache{{ uniqueId }}">{{'CLEAR_FILE_CACHE' | translate}}</label>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+        <app-input-field-renderer
+                [(fields)]="currentContentType.fields"
+                [(groups)]="currentContentType.groups"
+                [(formErrors)]="formErrors"
+                [(validationMessages)]="validationMessages"
+                [(model)]="model"
+                [(form)]="form"
+                [(files)]="files"
+                [localeFieldsAllowed]="localeFieldsAllowed"
+                [isLocalizationActive]="localeCurrent !== localeDefault"></app-input-field-renderer>
+
+        <div class="alert alert-danger mt-3 mb-0" [hidden]="!errorMessage">
+            <button type="button" class="close" (click)="errorMessage = ''">
+                <span aria-hidden="true">&times;</span>
+            </button>
+            {{errorMessage}}
+        </div>
+
+    </div>
+
+    <div class="modal-footer d-block">
+        <div class="float-right" *ngIf="localeList.length > 1">
+            <button type="button" class="btn btn-success mr-2" ngbTooltip="{{'SAVE' | translate}}" placement="left"
+                    [hidden]="localeCurrent == localeDefault"
+                    (click)="saveTranslations($event)">
+                <i class="icon-check"></i>
+            </button>
+            <div class="btn-group btn-group-toggle" ngbRadioGroup name="radioBasic" [(ngModel)]="localeCurrent" (ngModelChange)="onLocaleSwitch()" [ngModelOptions]="{standalone: true}">
+                <label ngbButtonLabel class="btn-secondary" *ngFor="let localeName of localeList">
+                    <input ngbButton type="radio" [value]="localeName">
+                    {{localeName}}
+                </label>
+            </div>
+        </div>
+        <div class="btn-group mr-1">
+            <button type="button" class="btn btn-success btn-wide" [disabled]="submitted || isSaveButtonDisabled" (click)="save(true)">
+                <span>{{'SAVE_AND_CLOSE' | translate}}</span>
+            </button>
+            <div class="btn-group" ngbDropdown role="group" placement="top-right">
+                <button class="btn btn-success dropdown-toggle-split" ngbDropdownToggle [disabled]="submitted || isSaveButtonDisabled"></button>
+                <div class="dropdown-menu" ngbDropdownMenu>
+                    <button ngbDropdownItem (click)="save()">{{'SAVE' | translate}}</button>
+                </div>
+            </div>
+        </div>
+        <button type="button" class="btn btn-secondary btn-wide" (click)="closeModal($event)">
+            <span>{{'CLOSE' | translate}}</span>
+        </button>
+    </div>
+
+</form>

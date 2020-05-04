@@ -1,0 +1,19 @@
+<html>
+<head>
+
+</head>
+<body>
+
+<form action="{{ path('omnipay_start', {id: order.id}) }}" method="post" id="paymentForm">
+    <input name="{{ receiptOptionName }}" type="hidden" value='{{ receiptJSON | raw }}'>
+    <button type="submit" style="display: none;">
+        {{ 'Please wait' | trans }}...
+    </button>
+</form>
+
+<script>
+    document.getElementById('paymentForm').submit();
+</script>
+
+</body>
+</html>

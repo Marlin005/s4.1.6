@@ -1,0 +1,36 @@
+services:
+    _defaults:
+        autowire: true
+        autoconfigure: true
+        public: false
+
+    Andchir\DigitalGoodsBundle\:
+        resource: '../../*'
+        exclude: '{Resources}'
+
+    Andchir\DigitalGoodsBundle\Controller\:
+        resource: '../../Controller'
+        tags: ['controller.service_arguments']
+
+    Andchir\DigitalGoodsBundle\Command\:
+        resource: '../../Command'
+        arguments: ['@service_container', '@parameter_bag', '@doctrine_mongodb.odm.default_document_manager']
+        tags: ['controller.service_arguments']
+
+    plugin_digital_goods:
+        class: Andchir\DigitalGoodsBundle\Service\DigitalGoodsService
+        arguments: ['@service_container', '@logger']
+        public: true
+
+    Andchir\DigitalGoodsBundle\EventSubscriber\OrderSubscriber:
+        tags: [kernel.event_subscriber]
+        arguments: ['@service_container']
+
+    Andchir\DigitalGoodsBundle\EventSubscriber\UserSubscriber:
+        tags: [kernel.event_subscriber]
+        arguments: ['@service_container']
+
+#    Andchir\DigitalGoodsBundle\EventSubscriber\DoctrineEventSubscriber:
+#        tags:
+#        - { name: doctrine_mongodb.odm.event_subscriber, connection: default, lazy: true }
+#        arguments: ['@service_container']

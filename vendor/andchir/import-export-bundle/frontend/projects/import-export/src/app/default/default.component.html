@@ -1,0 +1,35 @@
+<div class="position-relative">
+    <div class="tabs-top">
+        <a class="btn btn-outline-primary d-block d-md-inline-block ml-md-2" href="" [routerLink]="['/export']" routerLinkActive="active">
+            <i class="icon-outbox"></i>
+            &nbsp;
+            <span>{{'EXPORT' | translate}}</span>
+        </a>
+        <a class="btn btn-outline-primary d-block d-md-inline-block mb-2 mb-md-0" href="" [routerLink]="['/import']" routerLinkActive="active">
+            <i class="icon-inbox"></i>
+            &nbsp;
+            <span>{{'IMPORT' | translate}}</span>
+        </a>
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-body">
+
+        <div class="float-md-left mt-4 mt-md-0">
+            <h3>
+                <i class="icon-inbox"></i>
+                &nbsp;
+                {{'IMPORT_EXPORT' | translate}}
+            </h3>
+        </div>
+
+        <div class="clearfix"></div>
+        <hr>
+
+        <div class="min-height400">
+            <ng-content></ng-content>
+        </div>
+
+    </div>
+</div>

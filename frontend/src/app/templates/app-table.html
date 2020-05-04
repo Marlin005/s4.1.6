@@ -1,0 +1,89 @@
+<div class="table-responsive" [class.loading]="loading">
+    <table class="table table-striped table-divided mb-0" #tableElement>
+        <thead *ngIf="items.length > 0">
+            <tr>
+                <th class="text-left">
+                    <div class="custom-control custom-checkbox custom-checkbox-single mr-4" [hidden]="items.length === 0">
+                        <input type="checkbox" class="custom-control-input" id="fieldSelectAll" (click)="selectAll($event)" [checked]="getIsSelectedAll()">
+                        <label class="custom-control-label" for="fieldSelectAll"></label>
+                    </div>
+                </th>
+                <th *ngFor="let tableField of tableFields; let index=index">
+                    <button type="button" class="btn btn-block btn-link" (click)="selectSortBy(tableField.sortName)" *ngIf="tableField.sortName; else noSortable">
+                        {{tableField.title | translate}}
+                        <i [class.icon-arrow-down]="queryOptions.sort_dir == 'asc'" [class.icon-arrow-up]="queryOptions.sort_dir == 'desc'" [style.visibility]="tableField.sortName == queryOptions.sort_by ? 'visible' : 'hidden'"></i>
+                    </button>
+                    <ng-template #noSortable>
+                        <div class="px-3 py-2">{{tableField.title | translate}}</div>
+                    </ng-template>
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr class="show-on-hover-parent" *ngFor="let item of items">
+                <td>
+                    <div class="custom-control custom-checkbox custom-checkbox-single mr-4">
+                        <input type="checkbox" class="custom-control-input" id="fieldCheck{{item.id}}" [checked]="getIsSelected(item.id)" (click)="setSelected($event, item.id)">
+                        <label class="custom-control-label" for="fieldCheck{{item.id}}"></label>
+                    </div>
+                </td>
+                <td *ngFor="let tableField of tableFields; let index=index">
+                    <div class="relative" *ngIf="index == tableFields.length - 1">
+                        <div class="show-on-hover-right no-wrap">
+                            <button type="button" class="btn btn-secondary btn-sm ml-2" ngbTooltip="{{'EDIT' | translate}}" (click)="action('edit', item.id)">
+                                <i class="icon-pencil"></i>
+                            </button>
+                            <button type="button" class="btn btn-secondary btn-sm ml-2" ngbTooltip="{{'CLONE' | translate}}" (click)="action('copy', item.id)" *ngIf="isCloneAllowed">
+                                <i class="icon-stack"></i>
+                            </button>
+                            <button type="button" class="btn btn-secondary btn-sm ml-2" ngbTooltip="{{'DELETE' | translate}}" (click)="action('delete', item.id)">
+                                <i class="icon-cross"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <app-output-field
+                            [value]="item[tableField.name]"
+                            [outputType]="tableField.outputType"
+                            [options]="tableField.outputProperties"
+                            [object]="item"
+                            (changeRequest)="optionUpdate($event)"></app-output-field>
+
+                </td>
+            </tr>
+            <tr [hidden]="items.length > 0" class="table-active">
+                <td [attr.colspan]="tableFields.length + 1" class="text-center p-4">
+                    <ng-container *ngIf="queryOptions.search_word; else emptyMessage">
+                        {{ 'NOTHING_FOUND' | translate  }}.
+                    </ng-container>
+                    <ng-template #emptyMessage>
+                        {{ 'EMPTY' | translate }}.
+                    </ng-template>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <div class="pt-3" [hidden]="items.length === 0">
+
+        <div class="float-right">
+            <select class="form-control" [(ngModel)]="queryOptions.limit" (change)="pageChange('limit')">
+                <option [value]="10">10</option>
+                <option [value]="20">20</option>
+                <option [value]="50">50</option>
+                <option [value]="100">100</option>
+            </select>
+        </div>
+
+        <ngb-pagination *ngIf="collectionSize > queryOptions.limit"
+                        [class]="'mb-0'"
+                        [collectionSize]="collectionSize"
+                        [(page)]="queryOptions.page"
+                        [(pageSize)]="queryOptions.limit"
+                        [maxSize]="7"
+                        (pageChange)="pageChange()"
+                        [rotate]="true"
+                        [boundaryLinks]="false"></ngb-pagination>
+
+        <div class="clearfix"></div>
+    </div>
+</div>

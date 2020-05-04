@@ -1,0 +1,48 @@
+Bad credentials.: Не верный логин или пароль.
+Wrong login or password.: Не верный логин или пароль.
+User account is disabled.: Аккаунт пользователя отключен.
+The password fields must match.: Пароли не совпадают.
+Wrong value for your current password: Не верное значение текущего пароля
+register.email.already exists: Пользователь с указанным адресом эл. почты уже существует.
+This email is already used.: Пользователь с указанным адресом эл. почты уже существует.
+Role should not be blank.: Пожалуйста, укажите роль пользователя.
+You can not block yourself.: Вы не можете заблокировать самого себя.
+You can not delete yourself.: Вы не можете удалить самого себя.
+Password should not be blank.: Пароль не должен быть пустым.
+Password must be at least {{ limit }} characters long: Пароль должен быть больше {{ limit }} символов
+Password cannot be longer than {{ limit }} characters: Пароль не может быть больше {{ limit }} символов
+password_reset.user.not_found: Пользователь с указанным адресом эл. почты не найден.
+install.mongodb_connection_fail: Невозможно подключиться к серверу MongoDB.
+install.mongodb_database_not_exist: База данных не существует.
+install.mongodb_database_not_permitted: Не достаточно прав для записи в базу данных.
+install.mongodb_database_not_empty: База данных не пуста.
+install.settings_file_not_writable: Файл settings.yaml не доступен для записи.
+install.mongodb_database_clear_error: Ошибка при очистке базы данных.
+email.recipient_error: Не указан адрес получателя.
+System name already exists.: Системное имя уже используется.
+Data is empty.: Вы передете пустой набор данных.
+Title is empty.: Заголовок не может быть пустым.
+System name is empty.: Системное имя не может быть пустым.
+Collection name is empty.: Имя коллекции не может быть пустым.
+Please create fields for content type.: Пожалуйста, создайте поля для типа контента.
+You can not save content in system collections. Please choose a different collection name.: Данное имя коллекции зарезервировано. Пожалуйста, выберите другое имя.
+Item not found.: Запись в БД не найдена.
+Content type is required.: Пожалуйста, выберите тип контента.
+Category not found.: Категория не найдена.
+Content type not found.: Тип контента не найден.
+Product not found.: Контент не найден.
+Delivery is empty.: Пожалуйста, выберите метод доставки.
+Payment method is empty.: Пожалуйста, выберите метод оплаты.
+File not found.: Файл не найден.
+File is not writable.: Файл не доступен для записи.
+The file is not readable.: Файл не доступен для чтения.
+Content not compliant with YAML format.: Содержимое не соответствует формату YAML.
+You must first remove the categories with this content type.: Сначала Вы должны удалить категории с данным типом контента.
+Name can not be empty.: Имя не может быть пустым.
+Path can not be empty.: Путь не может быть пустым.
+The specified file path does not exist.: Указанный путь файла не существует.
+"Allowed file types: %extensions%.": "Разрешенные типы файлов: %extensions%."
+File type is not allowed.: Не корректный тип файла.
+Your cart is empty.: Ваша корзина пуста.
+'These products are not available in the quantity you need in stock: %list%.': 'Товары отсутствуют в необходимом количестве на складе: %list%.'
+Your user has read-only permission.: Ваш пользователь имеет разрешение только на чтение.

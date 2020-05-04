@@ -1,0 +1,26 @@
+{
+    "name": "andchir/omnipay-bundle",
+    "type": "symfony-bundle",
+    "description": "Omnipay bundle for Symfony 4.x",
+    "keywords": ["symfony", "bundle", "omnipay", "payment", "shopkeeper"],
+    "license": "MIT",
+    "homepage": "http://modx-shopkeeper.ru/",
+    "authors": [
+        {
+            "name": "andchir",
+            "email": "andchir@gmail.com"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "Andchir\\OmnipayBundle\\": ""
+        }
+    },
+    "require": {
+        "league/omnipay": "^3",
+        "omnipay/paypal": "^3.0",
+        "andrewnovikof/omnipay-sberbank": "^3.1",
+        "andchir/omnipay3-yandexkassa": "1.0.5",
+        "hiqdev/omnipay-robokassa": "^3.1"
+    }
+}

@@ -1,0 +1,66 @@
+import {NgModule} from '@angular/core';
+import {CommonModule, registerLocaleData} from '@angular/common';
+import {BrowserModule} from '@angular/platform-browser';
+import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
+
+import {TranslateLoader, TranslateModule} from '@ngx-translate/core';
+import {TranslateCustomLoader} from '@app/services/translateLoader';
+
+import {SharedModule} from '@app/shared.module';
+import {
+    AlertModalContentComponent,
+    ConfirmModalContentComponent,
+    ModalConfirmTextComponent
+} from '@app/components/modal-confirm-text.component';
+
+import {AppRoutingModule} from './app-routing.module';
+import {AppComponent} from './app.component';
+import {DefaultComponent} from './default/default.component';
+import {ImportComponent} from './import/import.component';
+import {ExportComponent} from './export/export.component';
+import {ModalImportContentComponent} from './import/modal-import-content.component';
+import {ModalExportContentComponent} from './export/modal-export-content.component';
+
+import localeEn from '@angular/common/locales/en';
+import localeRu from '@angular/common/locales/ru';
+
+registerLocaleData(localeEn, 'en-EN');
+registerLocaleData(localeRu, 'ru-RU');
+
+@NgModule({
+    imports: [
+        CommonModule,
+        BrowserModule,
+        BrowserAnimationsModule,
+        SharedModule,
+        TranslateModule.forRoot({
+            loader: {
+                provide: TranslateLoader,
+                useClass: TranslateCustomLoader
+            }
+        }),
+        AppRoutingModule
+    ],
+    declarations: [
+        AppComponent,
+        DefaultComponent,
+        ImportComponent,
+        ExportComponent,
+
+        AlertModalContentComponent,
+        ConfirmModalContentComponent,
+        ModalConfirmTextComponent,
+        ModalImportContentComponent,
+        ModalExportContentComponent
+    ],
+    entryComponents: [
+        AlertModalContentComponent,
+        ConfirmModalContentComponent,
+        ModalConfirmTextComponent,
+        ModalImportContentComponent,
+        ModalExportContentComponent
+    ],
+    bootstrap: [AppComponent]
+})
+export class AppModule {
+}

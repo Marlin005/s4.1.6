@@ -1,0 +1,12 @@
+<div class="pos-absolute-right pos-absolute-right2 no-events" *ngIf="items.length > 0 && parentId != 0">
+    <i class="icon-keyboard_arrow_right"></i>
+</div>
+<ul class="dropdown-menu dropdown-menu-second" *ngIf="items.length > 0" [class.shadow]="parentId != 0">
+    <li class="dropdown-item active" *ngFor="let item of items" [class.active]="item.id == currentId"
+        [class.current-level]="getIsActiveParent(item.id)">
+        <a href="" [routerLink]="['/catalog/category/', item.id]" [class.item-inactive]="!item.isActive">
+            {{item.title}}
+        </a>
+        <app-categories-list [inputItems]="inputItems" [parentId]="item.id" [currentId]="currentId"></app-categories-list>
+    </li>
+</ul>

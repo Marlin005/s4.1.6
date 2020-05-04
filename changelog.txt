@@ -1,0 +1,105 @@
+4.1.6
+- The problem with clearing the cache from the admin interface has been fixed.
+- Symfony updated to version 4.4.5.
+
+4.1.5
+- Filter order options, remove private data.
+- Fixed inserting a picture into a text editor from the file manager.
+- Updated shopping cart styles at the bottom of the page.
+- Updating the names of payment system parameters Robokassa according to new documentation.
+- Ability to connect to the database using URI.
+- Fixed opening a drop-down menu when clicking on mobile devices.
+
+4.1.4
+- Added functionality for accounting for product balances in stock.
+- Modal windows style update.
+- Ability to minimize modal windows.
+- Added commands "db_export" and "db_import" in "app:action" (DB backup).
+- Added new user role - "Administrator - Read Only" (has access to the administrator’s interface, but cannot create/edit or delete content).
+- Added ImportExportBundle.
+- Added DigitalGoodsBundle.
+- Fixed redirect after authorization using "go_to" parameter in URL.
+- Templates in admin area - filter by theme name.
+- New Twig function "outputFilters" (with caching).
+- Drag and drop files from File Manager. The image can be transferred to the upload widget or to a text editor.
+
+4.1.3
+- Added package shopkeeper4-comments - Reviews and ratings.
+
+4.1.3
+- Added Twig function isPaidProduct.
+- Checking the availability of products in stock.
+
+4.1.2
+- Updated path of the admin bundle JS files.
+- Move ModalFileContentComponent and ModalFileUploadContentComponent to SharedModule.
+
+4.1.1
+- Admin area. The main menu is placed in a separate component - NavbarMainComponent.
+- The ability to create components as separate modules (frontend and backend) that can use other components of the administrator interface has been made.
+- New abstract component for modals - AppModalContentAbstractComponent.
+
+4.1.0
+- Updated Symfony to version 4.3.5. Updated DoctrineMongoDBBundle to version 4.0.
+- Settings for site languages.
+- New settingsList() Twig function.
+- New pathLocalized() Twig function.
+- Locale parameter in URL. Locale is no longer saved in session.
+- On the authorization page, a button "Show password" has been added.
+- In admin area added buttons "Save and Close" and "Save".
+- Added class CatalogService.
+- Minor improvements in the administration interface.
+
+4.0.8
+- New order statistics module in admin area.
+- Ajax shopping cart.
+- Shopping cart store in DB refactoring. Added option "app.shopping_cart_lifetime" in settings.
+- In the default template added the ability to add products to favorites.
+
+4.0.7
+- Update Angular 7 to 8.
+- In the Catalog section, the dropdown menu has been replaced by a tree menu.
+- Updated style for buttons of the sub-components (tabs).
+
+4.0.6
+- In the administrator interface added search for users and orders by e-mail.
+- In the administrator interface, a link to the user is added to the list of orders if the order is made by a registered user.
+- Added blank template theme.
+- Mark active filters in JavaScript.
+- Added a public method for downloading the file.
+
+4.0.5
+
+- Create filters from parameters input type.
+- Ability to customize the fields in the checkout form.
+- Confirm user email.
+- File manager.
+- Ability to edit configuration YAML files in admin area.
+
+4.0.4
+- New template for slider on home page.
+- Added event "order.status_updated".
+- Updated menu in default template.
+- Field "back_url" for product form.
+- Checkbox for clear file cache in product UI. Auto clear file cache when delete product.
+- Added Etag for admin area and main page.
+- Twig-function shopCartProductCount().
+- Edit CSS and JS files in admin area.
+
+4.0.3
+- Fixed incorrect default language value.
+- Hide password in settings.
+- Add image for category.
+- shopkeeper.js - updateProductsPrice() add support inputs for price.
+- Twig-functions contentList() and includeContent() in separate class.
+- Added event "order.before_create".
+- Content type - sorting fields by drag-and-drop. Automatic saving sorting when saving Content type.
+- In Admin area added search field to Composer packages list.
+
+4.0.2
+- Template editor added.
+
+4.0.1
+- To send mail using the settings from the admin area.
+- Auto clear system cache when changing system settings.
+- Checkbox for clear file cache in category UI. Auto clear file cache when delete category.

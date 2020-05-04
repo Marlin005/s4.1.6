@@ -1,0 +1,81 @@
+<div class="card">
+    <div class="card-body">
+
+        <h3>
+            <i class="icon-columns"></i>
+            {{'TEMPLATES' | translate}}
+        </h3>
+        <hr>
+
+        <div class="mb-3">
+            <div class="float-md-left">
+
+                <select class="custom-select mb-2 mb-md-0" [(ngModel)]="queryOptions.category" (ngModelChange)="onThemeChange()">
+                    <option [value]="''">{{ 'ALL' | translate }}</option>
+                    <option *ngFor="let theme of themes" [value]="theme.name">{{ theme.name }}</option>
+                </select>
+                
+            </div>
+            <div class="float-md-right">
+
+                <div ngbDropdown class="d-block d-md-inline-block mb-2 mb-md-0" placement="bottom-right">
+                    <button class="btn btn-info d-block d-md-inline-block width-100 width-md-auto" ngbDropdownToggle>
+                        <span>{{'BATCH_ACTIONS' | translate}}</span>
+                    </button>
+                    <div ngbDropdownMenu>
+                        <button class="dropdown-item" (click)="deleteSelected()">{{'DELETE' | translate}}</button>
+                    </div>
+                </div>
+
+                <div ngbDropdown class="d-block d-md-inline-block ml-md-2 mb-2 mb-md-0" placement="bottom-right" *ngIf="files['config'].length">
+                    <button class="btn btn-primary d-block d-md-inline-block width-100 width-md-auto" ngbDropdownToggle>
+                        <span>{{'CONFIG_FILES' | translate}}</span>
+                    </button>
+                    <div class="max-height400" ngbDropdownMenu>
+                        <button class="dropdown-item" *ngFor="let item of files['config']" (click)="editFile(item, $event)">
+                            {{ item.name }} <span class="text-muted small">({{ item.size }})</span>
+                        </button>
+                    </div>
+                </div>
+
+                <div ngbDropdown class="d-block d-md-inline-block ml-md-2 mb-2 mb-md-0" placement="bottom-right" *ngIf="files['css'].length">
+                    <button class="btn btn-primary d-block d-md-inline-block width-100 width-md-auto" ngbDropdownToggle>
+                        <span>CSS / JS</span>
+                    </button>
+                    <div class="max-height400" ngbDropdownMenu>
+                        <button class="dropdown-item" *ngFor="let item of files['css']" (click)="editFile(item, $event)">
+                            {{ item.name }} <span class="text-muted small">({{ item.size }})</span>
+                        </button>
+                        <ng-container *ngIf="files['css'].length && files['js'].length">
+                            <div class="dropdown-divider"></div>
+                        </ng-container>
+                        <ng-container *ngIf="files['js'].length">
+                            <button class="dropdown-item" *ngFor="let item of files['js']" (click)="editFile(item, $event)">
+                                {{ item.name }} <span class="text-muted small">({{ item.size }})</span>
+                            </button>
+                        </ng-container>
+                    </div>
+                </div>
+
+                <button type="button" class="btn btn-success btn-wide d-block d-md-inline-block width-100 width-md-auto ml-md-2 mb-2 mb-md-0" (click)="modalOpen()">
+                    <i class="icon-plus mr-2"></i>
+                    <span>{{'ADD' | translate}}</span>
+                </button>
+
+            </div>
+            <div class="clearfix"></div>
+        </div>
+
+        <div class="min-height400">
+            <app-table [items]="items"
+                       [(selectedIds)]="selectedIds"
+                       [collectionSize]="collectionSize"
+                       [queryOptions]="queryOptions"
+                       [tableFields]="tableFields"
+                       [(loading)]="loading"
+                       [isCloneAllowed]="false"
+                       (actionRequest)="actionRequest($event)" #table></app-table>
+        </div>
+
+    </div>
+</div>

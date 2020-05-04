@@ -1,0 +1,49 @@
+{#
+How to Customize Form Rendering:
+https://symfony.com/doc/4.4/form/form_customization.html
+#}
+
+{% form_theme form '@Comments/Default/form/bootstrap_4_layout.html.twig' %}
+
+{%  if is_granted('ROLE_USER') %}
+
+    {{ form_start(form, {attr: {action: path('comment_add')}}) }}
+
+    <div class="card card-body bg-light mb-3">
+        <h4>{{ 'Add Comment' | trans }}</h4>
+
+        {{ form_row(form.comment, {attr: {rows: 4}}) }}
+
+        <div class="star-rating">
+            {{ form_row(form.vote, {label_attr: {class: 'radio-flat'}}) }}
+        </div>
+
+        {{ form_widget(form) }}
+
+        <div class="form-group mb-0">
+            <button type="submit" class="btn btn-primary" name="button-submit">
+                {{ 'Submit' | trans }}
+            </button>
+        </div>
+    </div>
+
+    {% include 'flash_messages.html.twig' %}
+
+    {{ form_end(form) }}
+
+{% else %}
+
+    {% if currentUrl is not defined %}
+    {%
+        set currentUrl = path(app.request.attributes.get('_route'), app.request.attributes.get('_route_params'))
+    %}
+    {% endif %}
+
+    <div class="card card-body bg-light mb-3">
+        <h4>{{ 'Add Comment' | trans }}</h4>
+        {{ 'Only authorized users can post reviews.' | trans }}
+        <br>
+        <a href="{{ path('login', {go_to: currentUrl}) }}">{{ 'Log in' | trans }}</a>
+    </div>
+
+{% endif %}

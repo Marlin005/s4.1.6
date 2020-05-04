@@ -1,0 +1,78 @@
+<div class="panel-file-manager bg-light" #container>
+    <div class="panel-file-manager-top shadow" #toolsContainer>
+        <button type="button" class="btn btn-sm btn-secondary mr-2" ngbTooltip="{{'UPLOAD_FILE' | translate}}" placement="right" [container]="toolsContainer" (click)="uploadFiles($event)">
+            <i class="icon-file"></i>
+        </button>
+        <button type="button" class="btn btn-sm btn-secondary mr-2" ngbTooltip="{{'CREATE_FOLDER' | translate}}" [container]="toolsContainer" (click)="createFolder($event)">
+            <i class="icon-plus"></i>
+        </button>
+        <button type="button" class="btn btn-sm btn-secondary mr-2" ngbTooltip="{{'RENAME_FOLDER' | translate}}" [container]="toolsContainer" *ngIf="currentPath" (click)="renameFolder($event)">
+            <i class="icon-pencil"></i>
+        </button>
+        <button type="button" class="btn btn-sm btn-secondary mr-2" ngbTooltip="{{'DELETE_FOLDER' | translate}}" [container]="toolsContainer" *ngIf="currentPath" (click)="deleteFolder($event)">
+            <i class="icon-cross"></i>
+        </button>
+    </div>
+    <div class="panel-file-manager-b overflow-auto-y" [class.loading]="loading">
+        <div class="p-3">
+
+            <div class="alert alert-danger" *ngIf="errorMessage">
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close" (click)="errorMessage = ''">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                {{errorMessage}}
+            </div>
+
+            <nav aria-label="breadcrumb" *ngIf="currentPath">
+                <ol class="breadcrumb py-1 px-2">
+                    <li class="breadcrumb-item" aria-current="page">
+                        {{ currentPath }}
+                    </li>
+                </ol>
+            </nav>
+
+            <div class="row no-gutters">
+
+                <div class="col-4 py-1 px-1" *ngIf="currentPath">
+                    <div class="card card-body p-1 bg-black-20 text-primary cursor-pointer" (click)="openDirPrevious($event)">
+                        <div class="text-center">
+                            <i class="icon-corner-up-left"></i>
+                        </div>
+                        <div class="text-center text-overflow small">
+                            {{ 'BACK' | translate }}
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-4 py-1 px-1" *ngFor="let file of files">
+                    <div class="card card-body p-1 cursor-pointer"
+                         draggable="true"
+                         [ngClass]="{'bg-black-20': file.isDir, 'bg-black-10': !file.isDir}" 
+                         (dragstart)="dragStartHandler(file, $event)"
+                         (click)="openFileHandler(file, $event)">
+                        <div class="text-center">
+                            <ng-container *ngIf="getIsImageFile(file.extension); else fileIcon">
+                                <div [title]="file.fileName">
+                                    <img [src]="getImageThumbnail(file)" alt="" class="max-width100 no-events" style="height: 42px;">
+                                </div>
+                            </ng-container>
+                            <ng-template #fileIcon>
+                                <div>
+                                    <i class="icon-folder" *ngIf="file.isDir"></i>
+                                    <i class="icon-file" *ngIf="!file.isDir"></i>
+                                </div>
+                                <div class="text-overflow small" [title]="file.fileName">
+                                    {{ file.fileName }}
+                                </div>
+                            </ng-template>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <button type="button" class="btn btn-primary btn-panel-file-manager-toggle" (click)="activeToggle($event)">
+        <i class="icon-keyboard_arrow_left"></i>
+    </button>
+</div>

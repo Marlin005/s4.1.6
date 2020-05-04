@@ -1,0 +1,30 @@
+
+{%
+    set currentUrl = path(app.request.attributes.get('_route'), app.request.attributes.get('_route_params'))
+%}
+
+<a name="comments"></a>
+<div class="py-3" id="shk-comments"></div>
+
+<script src="{{ asset('bundles/comments/js/comments.js') }}" defer></script>
+
+<script>
+    var shkComments;
+    document.addEventListener('DOMContentLoaded', function() {
+        shkComments = new ShkComments({
+            baseUrl: '/comments',
+            currentUrl: '{{ currentUrl }}',
+            threadId: '{{ threadId }}',
+            selector: '#shk-comments',
+            loadingClass: 'shopping-cart-loading',
+            onAddSuccess: function(data) {// Optional, just a usage example
+                if (data.result && data.result.status === 'published') {
+                    shkComments.getThreadHtml();
+                } else if (data.form) {
+                    shkComments.getContainer().querySelector('form').outerHTML = data.form;
+                    shkComments.formSubmitInit();
+                }
+            }
+        });
+    });
+</script>

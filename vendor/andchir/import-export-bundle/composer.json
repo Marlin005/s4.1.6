@@ -1,0 +1,16 @@
+{
+    "name": "andchir/import-export-bundle",
+    "description": "Import/Export for Shopkeeper4",
+    "type": "library",
+    "license": "Commercial",
+    "authors": [
+        {
+            "name": "andchir",
+            "email": "andchir@gmail.com"
+        }
+    ],
+    "require": {
+        "phpoffice/phpspreadsheet": "*",
+        "behat/transliterator": "*"
+    }
+}

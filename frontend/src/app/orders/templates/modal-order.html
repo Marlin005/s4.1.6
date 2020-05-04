@@ -1,0 +1,361 @@
+<div class="position-relative modal-on-maximized">
+    <div class="tabs-top">
+        <button type="button" class="btn btn-outline-primary btn-sm d-block"
+                [disabled]="submitted"
+                (click)="closeModal($event)">
+            <i class="icon-cross mr-1"></i>
+            <span>{{'CLOSE' | translate}}</span>
+        </button>
+        <button type="button" class="btn btn-outline-primary btn-sm d-block"
+                [disabled]="submitted"
+                (click)="minimize($event)">
+            <i class="icon-minimize mr-1"></i>
+            <span>{{'MINIMIZE' | translate}}</span>
+        </button>
+    </div>
+</div>
+<div class="modal-header d-block">
+    <div class="position-relative modal-on-minimized">
+        <div class="pos-absolute-right">
+            <button type="button" class="btn btn-no-border btn-sm-sm" [title]="'EXPAND' | translate" (click)="maximize($event)">
+                <i class="icon-maximize"></i>
+            </button>
+            <button type="button" class="btn btn-no-border btn-sm-sm ml-1" [title]="'CLOSE' | translate" (click)="closeModal($event)">
+                <i class="icon-cross"></i>
+            </button>
+        </div>
+    </div>
+    <h4 class="modal-title text-overflow mr-5">{{modalTitle}}</h4>
+</div>
+
+<form [formGroup]="form" method="post" (ngSubmit)="onSubmit()" [ngClass]="{'no-events': submitted}" #formEl>
+
+    <div class="modal-body py-0" [class.loading]="loading">
+
+        <div class="card bg-light mb-3">
+            <div class="card-body p-2">
+                <div class="float-right">
+                    <a class="btn btn-info btn-sm btn-wide" href="{{baseUrl}}admin/orders/print/{{model.id}}" target="_blank">
+                        <i class="icon-printer"></i>
+                        {{'PRINT' | translate}}
+                    </a>
+                </div>
+                <div class="d-inline-block p-1">
+                    {{model.createdDate | date: 'dd/MM/y H:mm:s'}}
+                </div>
+                <div class="clearfix"></div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-lg-6">
+                <div class="form-group form-group-message">
+                    <label class="label-filled">
+                        {{'ID' | translate}}
+                    </label>
+                    <input type="text" class="form-control" name="id"
+                           formControlName="id"
+                           [(ngModel)]="model.id"
+                           [class.is-invalid]="formErrors.id"
+                           readonly>
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <div class="form-group form-group-message">
+                    <label class="label-filled">
+                        {{'EMAIL' | translate}}
+                    </label>
+                    <input type="text" class="form-control" name="title"
+                           formControlName="email"
+                           [(ngModel)]="model.email"
+                           [class.is-invalid]="formErrors.email">
+                    <div *ngIf="formErrors.email" class="alert alert-danger">
+                        {{formErrors.email}}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-lg-6">
+
+                <div class="form-group form-group-message">
+                    <label class="label-filled">
+                        {{'FULL_NAME' | translate}}
+                    </label>
+                    <input type="text" class="form-control" name="title"
+                           formControlName="fullName"
+                           [(ngModel)]="model.fullName"
+                           [class.is-invalid]="formErrors.fullName">
+                    <div *ngIf="formErrors.fullName" class="alert alert-danger">
+                        {{formErrors.fullName}}
+                    </div>
+                </div>
+
+                <div class="form-group form-group-message">
+                    <label class="label-filled">
+                        {{'PHONE' | translate}}
+                    </label>
+                    <input type="text" class="form-control" name="phone"
+                           formControlName="phone"
+                           [(ngModel)]="model.phone"
+                           [class.is-invalid]="formErrors.phone">
+                    <div *ngIf="formErrors.phone" class="alert alert-danger">
+                        {{formErrors.phone}}
+                    </div>
+                </div>
+
+            </div>
+            <div class="col-lg-6">
+                <div class="form-group form-group-message">
+                    <label class="label-filled">
+                        {{'COMMENT' | translate}}
+                    </label>
+                    <textarea class="form-control" name="comment"
+                              formControlName="comment"
+                              rows="5"
+                              [(ngModel)]="model.comment"
+                              [class.is-invalid]="formErrors.comment"></textarea>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-lg-6">
+                <div class="form-group form-group-message">
+                    <label class="label-filled">
+                        {{'DELIVERY_METHOD' | translate}}
+                    </label>
+                    <select class="custom-select" name="deliveryName"
+                            formControlName="deliveryName"
+                            [(ngModel)]="model.deliveryName"
+                            [class.is-invalid]="formErrors.deliveryName"
+                            (ngModelChange)="onDeliveryUpdate()">
+                        <ng-container *ngIf="settings">
+                            <option [value]="setting.name" *ngFor="let setting of settings.SETTINGS_DELIVERY">{{setting.name}}</option>
+                        </ng-container>
+                    </select>
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <div class="form-group form-group-message">
+                    <label class="label-filled">
+                        {{'PAYMENT_METHOD' | translate}}
+                    </label>
+                    <select class="custom-select" name="paymentName"
+                            formControlName="paymentName"
+                            [(ngModel)]="model.paymentName"
+                            [class.is-invalid]="formErrors.paymentName">
+                        <ng-container *ngIf="settings">
+                            <option [value]="setting.name" *ngFor="let setting of settings.SETTINGS_PAYMENT">{{setting.name}}</option>
+                        </ng-container>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <div *ngIf="model.content">
+
+            <ngb-accordion [closeOthers]="true" activeIds="accordion-order-content" class="ngb-accordion">
+
+                <ngb-panel id="accordion-order-options" [title]="'OPTIONS' | translate">
+                    <ng-template ngbPanelContent>
+
+                        <div formArrayName="options">
+                            <table class="table table-bordered mb-0">
+                                <colgroup>
+                                    <col width="27%">
+                                    <col width="27%">
+                                    <col width="39%">
+                                    <col width="7%">
+                                </colgroup>
+                                <thead>
+                                    <tr>
+                                        <th>{{ 'SYSTEM_NAME' | translate }}</th>
+                                        <th>{{ 'NAME' | translate }}</th>
+                                        <th>{{ 'VALUE' | translate }}</th>
+                                        <th></th>
+                                    </tr>
+                                </thead>
+                                <tbody *ngIf="arrayFields.options">
+                                    <tr [formGroupName]="i + ''" *ngFor="let option of arrayFields.options.controls; let i=index">
+                                        <td>
+                                            <input type="text" class="form-control form-control-sm"
+                                                   formControlName="name"
+                                                   [ngClass]="{'is-invalid': option.controls.name.touched && !option.controls.name.valid}">
+                                        </td>
+                                        <td>
+                                            <input type="text" class="form-control form-control-sm"
+                                                   formControlName="title"
+                                                   [ngClass]="{'is-invalid': option.controls.title.touched && !option.controls.title.valid}">
+                                        </td>
+                                        <td class="text-center">
+                                            <input type="text" class="form-control form-control-sm"
+                                                   formControlName="value"
+                                                   [ngClass]="{'is-invalid': option.controls.value.touched && !option.controls.value.valid}">
+                                        </td>
+                                        <td class="text-center">
+                                            <button type="button" class="btn btn-secondary btn-sm" ngbTooltip="{{'DELETE' | translate}}" (click)="arrayFieldDelete('options', i, $event)">
+                                                <i class="icon-cross"></i>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                                <tfoot>
+                                    <tr class="bg-faded">
+                                        <td colspan="4" class="text-center">
+                                            <button type="button" class="btn btn-secondary btn-sm" (click)="arrayFieldAdd('options', $event)">
+                                                <i class="icon-plus"></i>
+                                                &nbsp;
+                                                <span>{{'ADD' | translate}}</span>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                </tfoot>
+                            </table>
+                        </div>
+
+                    </ng-template>
+                </ngb-panel>
+
+                <ngb-panel id="accordion-order-content" [title]="'ORDER_CONTENT' | translate">
+                    <ng-template ngbPanelContent>
+
+                        <table class="table table-bordered mb-0">
+                            <colgroup>
+                                <col width="10%">
+                                <col width="30%">
+                                <col width="20%">
+                                <col width="15%">
+                                <col width="25%">
+                            </colgroup>
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>{{ 'NAME' | translate }}</th>
+                                    <th class="text-center">{{ 'PRICE' | translate }}</th>
+                                    <th class="text-center">{{ 'QUANTITY' | translate }}</th>
+                                    <th class="text-center">{{ 'PRICE_TOTAL' | translate }}</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <ng-container *ngFor="let content of model.content">
+
+                                    <ng-container *ngIf="!getIsContentEdit(content)">
+                                        <tr class="show-on-hover-parent">
+                                            <td>{{content.id}}</td>
+                                            <td>
+                                                <ng-container *ngIf="!content.uri; else productLink">
+                                                    {{ content.title }}
+                                                </ng-container>
+                                                <ng-template #productLink>
+                                                    <a href="{{baseUrl}}{{content.uri}}" target="_blank">
+                                                        {{ content.title }}
+                                                    </a>
+                                                </ng-template>
+                                                <div class="text-muted small">
+                                                    {{ content.parametersString }}
+                                                    <div *ngIf="content.filesString">
+                                                        <i class="icon-file"></i>&nbsp;
+                                                        <span [innerHTML]="content.filesString"></span>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td class="text-center pr-2">
+                                                {{ content.price | number: '1.2-2':'ru-RU' }}
+                                            </td>
+                                            <td class="text-center">
+                                                {{ content.count }}
+                                            </td>
+                                            <td class="text-center pr-2">
+                                                <div class="relative">
+                                                    <div class="show-on-hover-right no-wrap">
+                                                        <button type="button" class="btn btn-secondary btn-sm ml-2" ngbTooltip="{{'EDIT' | translate}}" (click)="editContentToggle(content)">
+                                                            <i class="icon-pencil"></i>
+                                                        </button>
+                                                        <button type="button" class="btn btn-secondary btn-sm ml-2" ngbTooltip="{{'DELETE' | translate}}" (click)="deleteContent(content)">
+                                                            <i class="icon-cross"></i>
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                                {{ content.priceTotal | number: '1.2-2':'ru-RU' }}
+                                            </td>
+                                        </tr>
+                                    </ng-container>
+
+                                    <ng-container *ngIf="getIsContentEdit(content)">
+                                        <tr class="table-warning">
+                                            <td>{{ content.id }}</td>
+                                            <td>
+                                                {{ content.title }}
+                                            </td>
+                                            <td class="text-center pr-2">
+                                                <input type="number" class="d-inline-block form-control form-control-sm" name="price[]" min="0" step="0.01" style="width: 100px;" [(ngModel)]="content.price" (ngModelChange)="priceTotalUpdate()" [ngModelOptions]="{standalone: true}">
+                                            </td>
+                                            <td class="no-wrap" colspan="2">
+                                                <input type="number" class="d-inline-block form-control form-control-sm" name="count[]" min="1" step="1" style="width: 60px;" [(ngModel)]="content.count" (ngModelChange)="priceTotalUpdate()" [ngModelOptions]="{standalone: true}">
+                                                <button type="button" class="btn btn-secondary btn-sm ml-2" ngbTooltip="{{'ACCEPT' | translate}}" (click)="editContentToggle(content)">
+                                                    <i class="icon-check"></i>
+                                                </button>
+                                                <button type="button" class="btn btn-secondary btn-sm ml-2" ngbTooltip="{{'CANCEL' | translate}}" (click)="editContentCancel()">
+                                                    <i class="icon-ban"></i>
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    </ng-container>
+
+                                </ng-container>
+                                <tr>
+                                    <td></td>
+                                    <td>{{ 'DELIVERY' | translate }}</td>
+                                    <td class="text-center">
+                                        {{ model.deliveryPrice | number: '1.2-2':'ru-RU' }}
+                                    </td>
+                                    <td colspan="2"></td>
+                                </tr>
+                            </tbody>
+                            <tfoot>
+                                <tr>
+                                    <td class="text-right" colspan="4">
+                                        {{ 'PRICE_TOTAL' | translate }}:
+                                    </td>
+                                    <td class="text-center big">
+                                        <b>{{ model.price | number: '1.2-2':'ru-RU' }}</b>
+                                        &nbsp;
+                                        <span class="small">{{ model.currency }}</span>
+                                    </td>
+                                </tr>
+                            </tfoot>
+                        </table>
+
+                    </ng-template>
+                </ngb-panel>
+            </ngb-accordion>
+
+            <div class="alert alert-danger mt-3 mb-0" *ngIf="errorMessage">
+                <button type="button" class="close" (click)="errorMessage = ''">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                {{errorMessage}}
+            </div>
+
+        </div>
+
+    </div>
+    <div class="modal-footer d-block">
+        <div class="btn-group mr-1">
+            <button type="button" class="btn btn-success btn-wide" [disabled]="submitted" (click)="save(true, $event)">
+                <span>{{'SAVE_AND_CLOSE' | translate}}</span>
+            </button>
+            <div class="btn-group" ngbDropdown role="group" placement="top-right">
+                <button type="button" class="btn btn-success dropdown-toggle-split" ngbDropdownToggle [disabled]="submitted"></button>
+                <div class="dropdown-menu" ngbDropdownMenu>
+                    <button type="button" ngbDropdownItem (click)="save(false, $event)">{{'SAVE' | translate}}</button>
+                </div>
+            </div>
+        </div>
+        <button type="button" class="btn btn-secondary btn-wide" (click)="closeModal($event)">
+            <span>{{'CLOSE' | translate}}</span>
+        </button>
+    </div>
+</form>

@@ -1,0 +1,65 @@
+
+{% include '@Comments/Default/add_comment_form.html.twig' %}
+
+{% if comments | length > 0 %}
+    <div id="comments-list">
+        {% for comment in comments %}
+            <div class="card position-relative{% if loop.last %} mb-0{% else %} mb-3{% endif %}{% if comment.status != 'published' %} comment-unpublished{% endif %}">
+                <div class="card-body">
+                    <div>
+                        {{ comment.comment | nl2br }}
+                    </div>
+                    <div class="text-muted small pt-2">
+                        {{ comment.publishedTime | date('d.m.Y H:i:s', 'Europe/Moscow') }}
+                    </div>
+                    <div class="position-absolute" style="right: 10px; top: 2px;">
+                        <span class="star-rating-value{{ comment.vote }}{% if comment.status != 'published' %} text-muted{% endif %}"></span>
+                    </div>
+                    {% if is_granted('ROLE_ADMIN') %}
+                        <div class="clearfix"></div>
+                        <form action="{{ path('comment_update', {itemId: comment.id}) }}" method="post">
+                            <div class="position-relative">
+                                <div class="position-absolute text-right" style="bottom: 0; right: 0;">
+                                    {% if comment.status == 'published' %}
+                                        <button type="submit" class="btn btn-secondary btn-sm px-1 py-0 small ml-1" name="action" value="hide" data-id="{{ comment.id }}">
+                                            {{ 'Hide' | trans }}
+                                        </button>
+                                    {% else %}
+                                        <button type="submit" class="btn btn-secondary btn-sm px-1 py-0 small ml-1" name="action" value="publish" data-id="{{ comment.id }}">
+                                            {{ 'Publish' | trans }}
+                                        </button>
+                                    {% endif %}
+                                    <button type="button" class="btn btn-info btn-sm px-1 py-0 small ml-1" name="reply_toggle">
+                                        {{ 'Reply' | trans }}
+                                    </button>
+                                    <button type="submit" class="btn btn-danger btn-sm px-1 py-0 small ml-1" name="action" value="delete" data-id="{{ comment.id }}">
+                                        {{ 'Delete' | trans }}
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="comment-reply-form-container pt-3" style="display: none;">
+                                <hr class="mt-0">
+                                <textarea class="form-control w-100" rows="2" name="reply">{{ comment.reply }}</textarea>
+                                <div class="py-2 text-right">
+                                    <button type="submit" class="btn btn-primary btn-sm px-1 py-0 small" name="action" value="reply" data-id="{{ comment.id }}">
+                                        {{ 'Submit' | trans }}
+                                    </button>
+                                    <button type="button" class="btn btn-secondary btn-sm px-1 py-0 small ml-1" name="reply_toggle">
+                                        {{ 'Cancel' | trans }}
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+                    {% endif %}
+                    {% if comment.reply is not empty %}
+                        <div class="comment-reply-container mt-2 card card-body px-3 py-2 bg-light" style="margin-left: 50px;">
+                            {{ comment.reply | nl2br }}
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+{% elseif is_granted('ROLE_USER') %}
+    <div class="alert alert-secondary">{{ 'Your review will be the first.' | trans }}</div>
+{% endif %}

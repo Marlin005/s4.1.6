@@ -1,0 +1,25 @@
+{
+  "name": "shopkeeper4",
+  "version": "0.7.0",
+  "description": "Shopping cart and orders management",
+  "main": "",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "encore": "./node_modules/.bin/encore",
+    "build:dev": "./node_modules/.bin/encore dev --watch",
+    "build": "./node_modules/.bin/encore production"
+  },
+  "author": "Andchir",
+  "license": "MIT",
+  "dependencies": {
+    "bootstrap": "^4.4.1",
+    "jquery": "^3.4.1",
+    "nouislider": "^12.1.0",
+    "popper.js": "^1.16.1",
+    "wnumb": "^1.2.0"
+  },
+  "devDependencies": {
+    "@symfony/webpack-encore": "^0.27.0",
+    "serialize-javascript": "^3.0.0"
+  }
+}

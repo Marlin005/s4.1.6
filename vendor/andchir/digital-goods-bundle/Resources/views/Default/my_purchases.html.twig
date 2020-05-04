@@ -1,0 +1,69 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    {% include 'header.html.twig' %}
+
+    <main role="main" class="container">
+
+        <h1>{{ 'My purchases' | trans({}, 'e-store') }}</h1>
+
+        <div class="min-height400">
+
+            <div class="row mb-3">
+                <div class="col-md-6 offset-md-3">
+
+                    {% if mode == 'purchases' or mode == 'user_purchases' %}
+
+                        {% if purchases is not empty %}
+                            <table class="table table-bordered bg-light">
+                                <colgroup>
+                                    <col width="60%">
+                                    <col width="40%">
+                                </colgroup>
+                                {% for purchase in purchases %}
+                                    <tr>
+                                        <td>
+                                            {{ purchase.title }}
+                                        </td>
+                                        <td class="text-center">
+                                            <form action="{{ url('digital_goods_my_purchases_download', {'productId': purchase.id}) }}" method="post" target="_blank">
+                                                <input type="hidden" name="email" value="{{ requestEmail }}">
+                                                <input type="hidden" name="sc" value="{{ requestSecretCode }}">
+                                                <button type="submit" class="btn btn-success btn-sm">
+                                                    <i class="icon-inbox"></i>
+                                                    {{ 'Download' | trans({}, 'e-store') }}
+                                                </button>
+                                            </form>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            </table>
+
+                            {% include 'nav/pagination_simple.html.twig' %}
+
+                        {% else %}
+                            <div class="alert alert-info">
+                                {{ 'Purchases not found.' | trans({}, 'e-store') }}
+                            </div>
+                        {% endif %}
+
+                    {% else %}
+                        <p>
+                            {{ 'Please enter your address. email mail. You will receive an email with a link to a page from which you can download your purchases.' | trans({}, 'e-store') }}
+                        </p>
+
+                        <div class="card card-body mb-3">
+
+                            {% include 'flash_messages.html.twig' %}
+
+                            {{ form(form) }}
+
+                        </div>
+                    {% endif %}
+
+                </div>
+            </div>
+
+        </div>
+    </main>
+{% endblock %}

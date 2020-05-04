@@ -1,0 +1,4 @@
+services:
+    Andchir\ImportExportBundle\Command\ImportCommand:
+        tags:
+            - { name: "console.command", command: "app:import" }

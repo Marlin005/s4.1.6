@@ -1,0 +1,40 @@
+{
+  "name": "andrewnovikof/omnipay-sberbank",
+  "description": "Omnipay driver for Sberbank",
+  "type": "library",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "AndrewNovikof",
+      "email": "andrewnovikofff@gmail.com"
+    }
+  ],
+  "keywords": [
+    "sberbank",
+    "acquiring",
+    "rest",
+    "api",
+    "payment"
+  ],
+  "require": {
+    "php": "^7.1",
+    "omnipay/common": "v3.0.2"
+  },
+  "require-dev": {
+    "omnipay/tests": "^3",
+    "phpunit/phpunit": "^5.7|^6",
+    "squizlabs/php_codesniffer": "3.*"
+  },
+  "autoload": {
+    "psr-4": {
+      "Omnipay\\Sberbank\\": "src/"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Omnipay\\Sberbank\\Tests\\": "tests/"
+    }
+  },
+  "minimum-stability": "dev",
+  "prefer-stable": true
+}

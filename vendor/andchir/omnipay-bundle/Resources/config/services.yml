@@ -1,0 +1,5 @@
+services:
+    omnipay:
+        class: Andchir\OmnipayBundle\Service\OmnipayService
+        arguments: ['@service_container', '@logger', '@session']
+        public: true

@@ -1,0 +1,23 @@
+services:
+    _defaults:
+        autowire: true
+        autoconfigure: true
+        public: false
+
+    Andchir\ImportExportBundle\:
+        resource: '../../*'
+        exclude: '{Resource}'
+
+    Andchir\ImportExportBundle\Controller\:
+        resource: '../../Controller'
+        tags: ['controller.service_arguments']
+
+    plugin_import_export:
+        class: Andchir\ImportExportBundle\Service\ImportExportService
+        arguments: ['@service_container', '@logger', '@session', '@app.catalog']
+        public: true
+
+    Andchir\ImportExportBundle\EventSubscriber\DoctrineEventSubscriber:
+        tags:
+        - { name: doctrine_mongodb.odm.event_subscriber, connection: default, lazy: true }
+        arguments: ['@service_container']

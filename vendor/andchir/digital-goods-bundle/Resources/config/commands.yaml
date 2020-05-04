@@ -1,0 +1,4 @@
+services:
+    Andchir\DigitalGoodsBundle\Command\ImportCommand:
+        tags:
+            - { name: "console.command", command: "app:digital_goods_import" }
